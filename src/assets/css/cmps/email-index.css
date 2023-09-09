@@ -1,0 +1,135 @@
+
+
+/* .email-index-wrapper {
+    height: 100%;
+} */
+
+/*************************************** EmailIndex ***************************************/
+
+.compose-btn {
+    background-color: rgb(194, 231, 255);
+    border: none;
+    border-radius: 15px;
+    text-indent: 7px;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 15px;
+}
+
+/*************************************** EmailFilter ***************************************/
+
+
+
+/* .txt-filter-form {
+
+} */
+
+/* .txt-filter-btn {
+    color: black;
+    font-size: inherit;
+    font-family: inherit;
+    border: 0;
+    transition: 0.3s all;
+    padding: 0;
+    cursor: pointer;
+    background-color: rgb(121, 213, 255);
+    width: 70px;
+    border-radius: 15px;
+    margin-left: 5px;
+} */
+
+.filter-wrapper {
+    background-color: rgb(227, 235, 244);
+    border-radius: 10px;
+    margin-left: 100px;
+}
+
+.mail-filter-input {
+    border: none;
+    background-color: rgb(227, 235, 244);
+    text-indent: 7px;
+    font-size: 1em;
+}
+
+/*************************************** FolderFilter ***************************************/
+
+.folder-filter-wrapper {
+    background-color: white;
+    margin-top: 15px;
+}
+
+/*************************************** Sidebar ***************************************/
+
+.sidebar-wrapper {
+    flex-basis: 22%;
+    margin-top: 10px;
+}
+
+/*************************************** EmailList ***************************************/
+
+.emails-wrapper {
+    flex-basis: 78%;
+    background-color: white;
+    
+}
+
+/*************************************** EmailPreview ***************************************/
+
+.email-body {
+    --max-lines: 1;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--max-lines);
+    color: rgb(152, 145 ,150);
+    /* margin-left: 5px; */
+}
+
+.email {
+    font-weight: bold;
+    padding: 10px 0;
+    position: relative;
+}
+
+.email:hover {
+    box-shadow: 1px 1px 5px 1px rgba(100,121,143,0.8122);
+    cursor: pointer;
+}
+
+.read-email, .show-read {
+    background-color: rgb(223, 234, 249);
+}
+
+.hide {
+    display: none;
+}
+
+.show-read, .show-unread {
+    display: flex;
+    position: absolute;
+    right: 0;
+    /* margin-left: auto; */
+    /* margin-right: 5px; */
+}
+
+.show-unread {
+    background-color: white;
+}
+
+.email-from {
+    margin: 0 10px;
+}
+
+.text-subject, .email-from {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.email-date {
+    margin-left: auto;
+}
+
+.email-date > span {
+    margin-right: 5px;
+}

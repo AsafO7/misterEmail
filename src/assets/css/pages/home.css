@@ -1,5 +1,6 @@
 .home {
     text-align: center;
+    margin-top: 50px;
 }
 
 .home h1 {
@@ -7,6 +8,20 @@
     margin: 10px;
 }
 
-.home img {
-    width: 500px;
+.mail-icon-wrapper {
+    position: relative;
+}
+
+.mail-icon-count {
+    width: 20px;
+    height: 20px;
+    border: 2px solid red;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    right: -3px;
+    top: -32px;
+    line-height: 15px;
 }

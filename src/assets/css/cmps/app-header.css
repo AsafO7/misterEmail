@@ -1,6 +1,6 @@
 .app-header {
-    background: #e91e63;
-    color: white;
+    background-color: rgb(213, 240, 255);
+    color: black;
 
 }
 
@@ -25,4 +25,8 @@
 
 .app-header section.container>section {
     flex-grow: 1;
+}
+
+.header-nav {
+    margin-left: auto;
 }
