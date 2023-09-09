@@ -47,7 +47,6 @@ function save(mailToSave) {
     if (mailToSave.id) {
         return storageService.put(STORAGE_KEY, mailToSave)
     } else {
-        // robotToSave.isOn = false
         return storageService.post(STORAGE_KEY, mailToSave)
     }
 }

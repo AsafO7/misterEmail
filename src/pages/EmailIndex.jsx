@@ -44,7 +44,7 @@ export function EmailIndex() {
       <div className='sidebar-email-wrapper flex'>
         <Sidebar />
         { loading ? <h2>Loading...</h2> : 
-        <div>
+        <div className='emails-folder-wrapper flex column full-grow'>
         <FolderFilter onSetFilter={onSetFilter}/>
         <EmailList 
             emails={emails} 

@@ -1,8 +1,5 @@
 
 
-/* .email-index-wrapper {
-    height: 100%;
-} */
 
 /*************************************** EmailIndex ***************************************/
 
@@ -17,26 +14,6 @@
 }
 
 /*************************************** EmailFilter ***************************************/
-
-
-
-/* .txt-filter-form {
-
-} */
-
-/* .txt-filter-btn {
-    color: black;
-    font-size: inherit;
-    font-family: inherit;
-    border: 0;
-    transition: 0.3s all;
-    padding: 0;
-    cursor: pointer;
-    background-color: rgb(121, 213, 255);
-    width: 70px;
-    border-radius: 15px;
-    margin-left: 5px;
-} */
 
 .filter-wrapper {
     background-color: rgb(227, 235, 244);
@@ -65,12 +42,31 @@
     margin-top: 10px;
 }
 
+.sidebar-wrapper > span {
+    margin-right: 10px;
+    padding: 5px 10px 5px 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.sidebar-wrapper :first-child {
+    margin-top: 0;
+}
+
+.sidebar-wrapper > span > span {
+    margin-left: 5px;
+}
+
+.selected-folder {
+    background-color: rgb(223, 234, 249);
+    font-weight: 500;
+    border-radius: 30px;
+}
+
 /*************************************** EmailList ***************************************/
 
 .emails-wrapper {
-    flex-basis: 78%;
     background-color: white;
-    
 }
 
 /*************************************** EmailPreview ***************************************/
@@ -82,7 +78,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--max-lines);
     color: rgb(152, 145 ,150);
-    /* margin-left: 5px; */
+    margin-left: 5px;
 }
 
 .email {
@@ -100,6 +96,10 @@
     background-color: rgb(223, 234, 249);
 }
 
+.hide, .show-read, .show-unread, .mark-as-unread, .mark-as-read {
+    margin-right: 5.5px;
+}
+
 .hide {
     display: none;
 }
@@ -108,8 +108,6 @@
     display: flex;
     position: absolute;
     right: 0;
-    /* margin-left: auto; */
-    /* margin-right: 5px; */
 }
 
 .show-unread {
@@ -132,4 +130,11 @@
 
 .email-date > span {
     margin-right: 5px;
+}
+
+
+/*************************************** EmailDetails ***************************************/
+
+.email-sent-details {
+    margin-top: 20px;
 }
