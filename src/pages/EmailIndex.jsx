@@ -11,7 +11,7 @@ export function EmailIndex() {
   // const [user, setUser] = useState(mailService.createUser)
   const [emails, setEmails] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filterBy, setFilterBy] = useState({folder: "", txt: "", isRead: null})
+  const [filterBy, setFilterBy] = useState({folder: "", txt: "", isRead: "", date: ""})
 
   useEffect(() => {
     getEmails()

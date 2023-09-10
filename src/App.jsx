@@ -5,7 +5,7 @@ import { Route, HashRouter as Router, Routes } from 'react-router-dom';
 import { EmailIndex } from './pages/EmailIndex';
 import AppHeader from './cmps/AppHeader';
 import AppFooter from './cmps/AppFooter';
-import { EmailDetails } from './cmps/EmailDetails'
+import { EmailDetails } from './pages/EmailDetails'
 
 export function App() {
 

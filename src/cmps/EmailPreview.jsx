@@ -30,19 +30,21 @@ export function EmailPreview({email, setEmails, filterBy}) {
   }
 
   async function onReadStateChange() {
-    const readState = email.isRead
-    const updatedMail = {...email, isRead: !readState}
+    email.isRead ? onBooleanStateChange("isRead", !email.isRead, 'show-unread', 'show-read')
+    : onBooleanStateChange("isRead", !email.isRead, 'show-read', 'show-unread')
+  }
+
+  async function onFavoriteStateChange() {
+    email.isStarred ? onBooleanStateChange("isStarred", !email.isStarred, 'full-star', 'empty-star')
+    : onBooleanStateChange("isStarred", !email.isStarred, 'empty-star', 'full-star')
+  }
+
+  async function onBooleanStateChange(field, newState, classToAdd, classToRemove) {
+    const updatedMail = {...email, [field]: newState}
     try {
       await mailService.save(updatedMail)
-      const emails = await mailService.query(filterBy)
-      if(readState) {
-        iconsEl.current.classList.add('show-unread')
-        iconsEl.current.classList.remove('show-read')
-      }
-      else {
-        iconsEl.current.classList.add('show-read')
-        iconsEl.current.classList.remove('show-unread')
-      }  
+      const emails = await mailService.query(filterBy) 
+      toggleIconClass(classToAdd, classToRemove)
       setEmails(emails)
     }
     catch(err) {
@@ -52,21 +54,42 @@ export function EmailPreview({email, setEmails, filterBy}) {
 
   function handleIconClass(action) {
     const showClass = email.isRead ? 'show-read' : 'show-unread'
-    if(action === "enter") {
-      iconsEl.current.classList.add(showClass)
-      iconsEl.current.classList.remove('hide')
-    } else {
-      iconsEl.current.classList.remove(showClass)
-      iconsEl.current.classList.add('hide')
-    }
+    action === "enter" ? toggleIconClass(showClass, 'hide') : toggleIconClass('hide', showClass)
+  }
+
+  function toggleIconClass(classToAdd, classToRemove) {
+    iconsEl.current.classList.add(classToAdd)
+    iconsEl.current.classList.remove(classToRemove)
   }
 
   function identifyIcon(dataAtt, classEl) {
     if(dataAtt !== null) {
-      dataAtt === "DeleteIcon" ? onRemoveEmail() : onReadStateChange()
+      switch(dataAtt) {
+        case "DeleteIcon": 
+          onRemoveEmail()
+          break;
+        case "StarIcon":
+        case  "StarBorderIcon":
+          onFavoriteStateChange()
+          break;
+        default: 
+        onReadStateChange() 
+      }
     }
     else {
-      classEl === "show-read" || classEl === "show-unread" ? onRemoveEmail() : onReadStateChange()
+      switch(classEl) {
+        case "show-read":
+        case "show-unread":
+          onRemoveEmail()
+          break;
+        case 'full-star':
+        case 'empty-star':
+        case 'flex':
+          onFavoriteStateChange()
+          break;
+        default: 
+        onReadStateChange()
+      }
     }
   }
 
@@ -78,6 +101,7 @@ export function EmailPreview({email, setEmails, filterBy}) {
                   break;
       default: onEmailNav()
     }
+    // console.log(e.target.getAttribute('data-testid'))
   }
 
   return (
@@ -85,7 +109,9 @@ export function EmailPreview({email, setEmails, filterBy}) {
       onMouseOver={() => handleIconClass("enter")} 
       onMouseLeave={() => handleIconClass("leave")}
       onClick={(e) => handleClick(e)}>
-      {email.isStarred ? <StarIcon sx={{color: '#fbba00'}}/> : <StarBorderIcon/>}
+      {email.isStarred ? <span className='full-star'>
+        <StarIcon sx={{color: '#fbba00'}} onClick={handleClick}/></span> 
+        : <span className='empty-star'><StarBorderIcon onClick={handleClick}/></span>}
       <span className='email-from'>{email.from}</span>
       <span className='text-subject'>{email.subject}</span>
       <p className='email-body'>{email.body}</p>

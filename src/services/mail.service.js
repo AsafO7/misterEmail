@@ -19,12 +19,17 @@ async function query(filterBy) {
         const mails = await storageService.query(STORAGE_KEY)
         let filteredMails = mails
         if(filterBy) {
-            const { /*folder,*/ txt, isRead } = filterBy
+            const { /*folder,*/ txt, isRead, date } = filterBy
             if(txt !== '') {
                 filteredMails = mails.filter((email) => email.body.includes(txt))
             }
-            if(isRead !== null) {
-                filteredMails = isRead ? filteredMails : filteredMails.filter((email) => email.isRead === isRead)
+            if(isRead !== "") {
+                const isReadState = isRead === "true" ? true : false
+                filteredMails = filteredMails.filter((email) => email.isRead === isReadState)
+            }
+            if(date !== "") {
+                filteredMails.sort((mail1, mail2) => mail1.sentAt - mail2.sentAt)
+                if(date === "desc") filteredMails.reverse()
             }
         }
         
