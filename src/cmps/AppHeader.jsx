@@ -8,7 +8,7 @@ export default function AppHeader() {
             <nav className="header-nav">
               <NavLink to="/">Home</NavLink>
               <NavLink to="/about">About Us</NavLink>
-              <NavLink to="/mail">Email</NavLink>
+              <NavLink to="/mails">Email</NavLink>
             </nav>
         </section>
     </header>

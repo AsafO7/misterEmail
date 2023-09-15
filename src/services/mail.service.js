@@ -7,7 +7,7 @@ export const mailService = {
     remove,
     getById,
     createMail,
-    createUser,
+    getUser,
 }
 
 const STORAGE_KEY = 'mails'
@@ -65,7 +65,7 @@ function createMail(subject = "A", body = "B", to = "C", from = "D") {
     }
 }
 
-function createUser() {
+function getUser() {
     return {
         email: 'user@appsus.com', fullname: 'Mahatma Appsus'
     }

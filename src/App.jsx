@@ -18,8 +18,9 @@ export function App() {
                     <Routes>
                         <Route path="/" element={<Home />}/>
                         <Route path="/about" element={<AboutUs />}/>
-                        <Route path="/mail" element={<EmailIndex />}/>
-                        <Route path="/mail/:emailId" element={<EmailDetails />} />
+                        <Route path="/mails" element={<EmailIndex />}>
+                            <Route path="/mails/:emailId" element={<EmailDetails />} />
+                        </Route>
                     </Routes>
                 </main>
 

@@ -83,6 +83,7 @@ label {
     -webkit-line-clamp: var(--max-lines);
     color: rgb(152, 145 ,150);
     margin-left: 5px;
+    word-break: break-all;
 }
 
 .email {
@@ -96,25 +97,26 @@ label {
     cursor: pointer;
 }
 
-.read-email, .show-read {
-    background-color: rgb(223, 234, 249);
-}
-
-.hide, .show-read, .show-unread, .mark-as-unread, .mark-as-read {
-    margin-right: 5.5px;
-}
-
-.hide {
-    display: none;
-}
-
-.show-read, .show-unread {
+.email:hover .mail-icons-read, .email:hover .mail-icons-unread {
     display: flex;
     position: absolute;
     right: 0;
+    margin-right: 5.5px;
 }
 
-.show-unread {
+.email:not(:hover) .mail-icons-read, .email:not(:hover) .mail-icons-unread {
+    display: none;
+}
+
+.read-email, .mail-icons-read {
+    background-color: rgb(223, 234, 249);
+}
+
+.mark-as-unread, .mark-as-read {
+    margin-right: 5.5px;
+}
+
+.mail-icons-unread {
     background-color: white;
 }
 

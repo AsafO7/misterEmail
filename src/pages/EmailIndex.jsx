@@ -5,6 +5,7 @@ import { mailService } from '../services/mail.service'
 import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import { FolderFilter } from '../cmps/FolderFilter'
+import { Outlet } from 'react-router-dom'
 
 export function EmailIndex() {
 
@@ -29,6 +30,30 @@ export function EmailIndex() {
     }
   }
 
+  async function onRemoveEmail(emailId) {
+    try {
+      await mailService.remove(emailId)
+      const emails = await mailService.query(filterBy)
+      setEmails(emails)
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+
+  async function onBooleanStateChange(emailId, field, newState) {
+    try {
+      const email = await mailService.getById(emailId)
+      const updatedMail = {...email, [field]: newState}
+      await mailService.save(updatedMail)
+      const emails = await mailService.query(filterBy) 
+      setEmails(emails)
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+
   function onSetFilter(fieldsToUpdate) {
     setFilterBy((prevFilterBy) => ({ ...prevFilterBy, ...fieldsToUpdate }))
   }
@@ -46,11 +71,14 @@ export function EmailIndex() {
         { loading ? <h2>Loading...</h2> : 
         <div className='emails-folder-wrapper flex column full-grow'>
         <FolderFilter onSetFilter={onSetFilter}/>
+        <Outlet />
         <EmailList 
             emails={emails} 
             setEmails={setEmails} 
             filterBy={filterBy} 
-            onSetFilter={onSetFilter}/>
+            onSetFilter={onSetFilter}
+            onRemoveEmail={onRemoveEmail}
+            onBooleanStateChange={onBooleanStateChange}/>
           </div>}
       </div>
     </div>
