@@ -5,6 +5,7 @@ import { mailService } from '../services/mail.service';
 import { useNavigate } from 'react-router-dom';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
 
 export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
 
@@ -15,33 +16,29 @@ export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
     navigate(`${email.id}`)
   }
 
-  function identifyIcon(dataAtt, classEl) {
-    if(dataAtt !== null) {
-      switch(dataAtt) {
-        case "DeleteIcon": 
-          onRemoveEmail(email.id)
-          break;
-        case "StarIcon":
-        case  "StarBorderIcon":
-          onBooleanStateChange(email.id, "isStarred", !email.isStarred)
-          break;
-        default: 
-        onBooleanStateChange(email.id, "isRead", !email.isRead) 
-      }
-    }
-    else {
-      switch(classEl) {
-        case "delete-icon":
-          onRemoveEmail(email.id)
-          break;
-        case 'full-star':
-        case 'empty-star':
-        case 'flex':
-          onBooleanStateChange(email.id, "isStarred", !email.isStarred)
-          break;
-        default: 
-        onBooleanStateChange(email.id, "isRead", !email.isRead)
-      }
+  async function identifyIcon(dataAtt, classEl) {
+    dataAtt !== null ? chooseIconAction(dataAtt) : chooseIconAction(classEl)
+  }
+
+  async function chooseIconAction(identifier) {
+    switch(identifier) {
+      case "delete-icon":
+      case "DeleteIcon":
+        email.isTrash ? await onRemoveEmail(email.id) : await onBooleanStateChange(email.id, "isTrash", true)
+        break;
+      case "unarchive-icon":
+      case "UnarchiveIcon":
+        await onBooleanStateChange(email.id, "isTrash", false)
+        break;
+      case 'full-star':
+      case 'empty-star':
+      case 'flex':
+      case "StarIcon":
+      case "StarBorderIcon":
+        await onBooleanStateChange(email.id, "isStarred", !email.isStarred)
+        break;
+      default: 
+      await onBooleanStateChange(email.id, "isRead", !email.isRead)
     }
   }
 
@@ -73,6 +70,7 @@ export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
       <section className={email.isRead ? 'mail-icons-read' : 'mail-icons-unread'}>
         {email.isRead ? <span className='mark-as-unread'><MarkunreadIcon onClick={handleClick}/></span>
         : <span className='mark-as-read'><MarkEmailReadIcon onClick={handleClick}/></span>}
+        {email.isTrash && <span className='unarchive-icon'><UnarchiveIcon onClick={handleClick}/></span>}
         <span className='delete-icon'><DeleteIcon /></span>
       </section>
     </section>

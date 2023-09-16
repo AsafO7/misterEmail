@@ -5,14 +5,14 @@ import { mailService } from '../services/mail.service'
 import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import { FolderFilter } from '../cmps/FolderFilter'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 
 export function EmailIndex() {
 
-  // const [user, setUser] = useState(mailService.createUser)
   const [emails, setEmails] = useState([])
   const [loading, setLoading] = useState(true)
   const [filterBy, setFilterBy] = useState({folder: "", txt: "", isRead: "", date: ""})
+  const params = useParams()
 
   useEffect(() => {
     getEmails()
@@ -27,6 +27,16 @@ export function EmailIndex() {
     catch(err) {
       console.log(err)
       setLoading(false)
+    }
+  }
+
+  async function getEmailById(emailId) {
+    try {
+      const mail = await mailService.getById(emailId)
+      return mail
+    }
+    catch(err) {
+      console.log(err)
     }
   }
 
@@ -67,19 +77,19 @@ export function EmailIndex() {
         <EmailFilter filterBy={filterBy} onSetFilter={onSetFilter}/>
       </section>
       <div className='sidebar-email-wrapper flex'>
-        <Sidebar />
+        <Sidebar filterBy={filterBy} onSetFilter={onSetFilter}/>
         { loading ? <h2>Loading...</h2> : 
         <div className='emails-folder-wrapper flex column full-grow'>
-        <FolderFilter onSetFilter={onSetFilter}/>
-        <Outlet />
-        <EmailList 
-            emails={emails} 
-            setEmails={setEmails} 
-            filterBy={filterBy} 
-            onSetFilter={onSetFilter}
-            onRemoveEmail={onRemoveEmail}
-            onBooleanStateChange={onBooleanStateChange}/>
-          </div>}
+          <FolderFilter onSetFilter={onSetFilter}/>
+          {params.emailId ? <Outlet context={[onRemoveEmail, getEmailById, onBooleanStateChange]}/> :
+          <EmailList 
+              emails={emails} 
+              setEmails={setEmails} 
+              filterBy={filterBy} 
+              onRemoveEmail={onRemoveEmail}
+              onBooleanStateChange={onBooleanStateChange}/>
+          }
+        </div>}
       </div>
     </div>
   )

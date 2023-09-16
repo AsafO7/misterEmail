@@ -19,25 +19,45 @@ async function query(filterBy) {
         const mails = await storageService.query(STORAGE_KEY)
         let filteredMails = mails
         if(filterBy) {
-            const { /*folder,*/ txt, isRead, date } = filterBy
-            if(txt !== '') {
-                filteredMails = mails.filter((email) => email.body.includes(txt))
-            }
-            if(isRead !== "") {
-                const isReadState = isRead === "true" ? true : false
-                filteredMails = filteredMails.filter((email) => email.isRead === isReadState)
-            }
-            if(date !== "") {
-                filteredMails.sort((mail1, mail2) => mail1.sentAt - mail2.sentAt)
-                if(date === "desc") filteredMails.reverse()
-            }
+            filteredMails = filterMails(filterBy, mails)
         }
-        
         return filteredMails
     }
     catch(err) {
         console.log(err)
     }
+}
+
+function filterMails(filterBy, mails) {
+    let newMails = mails.filter((email) => email.isTrash === false)
+    const { folder, txt, isRead, date } = filterBy
+        if(folder !== '') {
+            switch(folder) {
+                case "Starred":
+                    newMails = mails.filter((email) => email.isStarred === true && email.isTrash === false)
+                    break;
+                case "Sent":
+                    newMails = mails.filter((email) => email.from === getUser().email && email.isTrash === false)
+                    break;
+                case "Draft":
+                case "Trash":
+                    newMails = mails.filter((email) => email.isTrash === true)
+                    break;
+                default: newMails = mails.filter((email) => email.isTrash === false)
+            }
+        }
+        if(txt !== '') {
+            newMails = mails.filter((email) => email.body.includes(txt))
+        }
+        if(isRead !== "") {
+            const isReadState = isRead === "true" ? true : false
+            newMails = newMails.filter((email) => email.isRead === isReadState)
+        }
+        if(date !== "") {
+            newMails.sort((mail1, mail2) => mail1.sentAt - mail2.sentAt)
+            if(date === "desc") newMails.reverse()
+        }
+    return newMails
 }
 
 function getById(id) {
@@ -84,7 +104,8 @@ function _createMails() {
                 sentAt : 1511133930594, 
                 removedAt : null, //for later use
                 from: 'momo@momo.com', 
-                to: 'user@appsus.com'
+                to: 'user@appsus.com',
+                isTrash: false
             },
             {
                 id: 'e102',
@@ -95,7 +116,8 @@ function _createMails() {
                 sentAt : 1571133930594, 
                 removedAt : null, //for later use
                 from: 'jojo@jojo.com', 
-                to: 'user@appsus.com'
+                to: 'user@appsus.com',
+                isTrash: false
             },
             {
                 id: 'e103',
@@ -105,8 +127,9 @@ function _createMails() {
                 isStarred: false, 
                 sentAt : 1651133930594, 
                 removedAt : null, //for later use
-                from: 'koko@koko.com', 
-                to: 'user@appsus.com'
+                from: 'user@appsus.com', 
+                to: 'koko@koko.com',
+                isTrash: true
             }
         ]
         utilService.saveToStorage(STORAGE_KEY, emails)

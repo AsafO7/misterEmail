@@ -4,40 +4,51 @@ import SendIcon from '@mui/icons-material/Send';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom"
 
-export function Sidebar() {
+export function Sidebar({filterBy, onSetFilter}) {
 
   const [folder, setFolder] = useState("Inbox")
+  const params = useParams()
+  const navigate = useNavigate()
+
+  function handleFolderSwitch(folderName) {
+    onSetFilter({...filterBy, folder: folderName})
+    setFolder(folderName)
+    if(params.emailId) {
+      navigate('/mails')
+    }
+  }
 
   return (
     <nav className="sidebar-wrapper flex column">
       <span 
         className={`flex ${folder === "Inbox" ? "selected-folder" : ""}`}
-        onClick={() => setFolder("Inbox")}>
+        onClick={() => handleFolderSwitch("Inbox")}>
         <InboxIcon />
         <span>Inbox</span>
       </span>
       <span 
         className={`flex ${folder === "Starred" ? "selected-folder" : ""}`}
-        onClick={() => setFolder("Starred")}>
+        onClick={() => handleFolderSwitch("Starred")}>
         <StarBorderIcon />
         <span>Starred</span>
       </span>
       <span 
         className={`flex ${folder === "Sent" ? "selected-folder" : ""}`}
-        onClick={() => setFolder("Sent")}>
+        onClick={() => handleFolderSwitch("Sent")}>
         <SendIcon />
         <span>Sent</span>
       </span>
       <span 
         className={`flex ${folder === "Draft" ? "selected-folder" : ""}`}
-        onClick={() => setFolder("Draft")}>
+        onClick={() => handleFolderSwitch("Draft")}>
         <DraftsIcon />
         <span>Draft</span>
       </span>
       <span 
         className={`flex ${folder === "Trash" ? "selected-folder" : ""}`}
-        onClick={() => setFolder("Trash")}>
+        onClick={() => handleFolderSwitch("Trash")}>
         <DeleteOutlineIcon />
         <span>Trash</span>
       </span>

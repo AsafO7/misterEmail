@@ -144,3 +144,7 @@ label {
 .email-sent-details {
     margin-top: 20px;
 }
+
+.displayed-email-wrapper {
+    background-color: rgb(227, 237, 245);
+}
