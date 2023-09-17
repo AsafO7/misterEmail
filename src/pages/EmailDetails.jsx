@@ -38,7 +38,7 @@ export function EmailDetails() {
         <h2>{email.subject}</h2>
         <section className="flex space-between email-sent-details">
             <div className="flex column">
-              <span>From <b>{email.from}</b></span>
+              <span>From {mailService.getUser().email === email.from ? "me" : <b>{email.from}</b>}</span>
               <span>To {mailService.getUser().email === email.to ? "me" : <b>{email.to}</b>}</span>
             </div>
             <div className="flex column align-end">

@@ -3,6 +3,27 @@
 
 /*************************************** EmailIndex ***************************************/
 
+.email-index-wrapper {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-auto-flow: column;
+    grid-template-areas: "h"
+                        "as";
+}
+
+.email-filter-wrapper {
+    grid-area: 'h';
+}
+
+.sidebar-wrapper {
+    grid-area: 'as';
+}
+
+.emails-folder-wrapper {
+    grid-area: 'm';
+}
+
 .compose-btn {
     background-color: rgb(194, 231, 255);
     border: none;
@@ -30,7 +51,7 @@
 
 /*************************************** FolderFilter ***************************************/
 
-.folder-filter-wrapper {
+.dropdown-filter-wrapper {
     background-color: white;
     margin-top: 15px;
 }

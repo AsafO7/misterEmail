@@ -4,7 +4,7 @@ import { Sidebar } from '../cmps/Sidebar'
 import { mailService } from '../services/mail.service'
 import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
-import { FolderFilter } from '../cmps/FolderFilter'
+import { DropdownFilter } from '../cmps/DropdownFilter'
 import { Outlet, useParams } from 'react-router-dom'
 
 export function EmailIndex() {
@@ -77,10 +77,12 @@ export function EmailIndex() {
         <EmailFilter filterBy={filterBy} onSetFilter={onSetFilter}/>
       </section>
       <div className='sidebar-email-wrapper flex'>
-        <Sidebar filterBy={filterBy} onSetFilter={onSetFilter}/>
+        <aside className='sidebar-wrapper'>
+          <Sidebar filterBy={filterBy} onSetFilter={onSetFilter}/>
+        </aside>
         { loading ? <h2>Loading...</h2> : 
-        <div className='emails-folder-wrapper flex column full-grow'>
-          <FolderFilter onSetFilter={onSetFilter}/>
+        <main className='emails-folder-wrapper flex column full-grow'>
+          <DropdownFilter onSetFilter={onSetFilter}/>
           {params.emailId ? <Outlet context={[onRemoveEmail, getEmailById, onBooleanStateChange]}/> :
           <EmailList 
               emails={emails} 
@@ -89,7 +91,7 @@ export function EmailIndex() {
               onRemoveEmail={onRemoveEmail}
               onBooleanStateChange={onBooleanStateChange}/>
           }
-        </div>}
+        </main>}
       </div>
     </div>
   )

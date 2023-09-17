@@ -130,7 +130,67 @@ function _createMails() {
                 from: 'user@appsus.com', 
                 to: 'koko@koko.com',
                 isTrash: true
-            }
+            },
+            {
+                id: 'e104',
+                subject: 'Biss you!',
+                body: 'Would bate to catch up sometimes', 
+                isRead: false, 
+                isStarred: false, 
+                sentAt : 1571133930594, 
+                removedAt : null, //for later use
+                from: 'bobo@bobo.com', 
+                to: 'user@appsus.com',
+                isTrash: false
+            },
+            {
+                id: 'e105',
+                subject: 'ciss you!',
+                body: 'Would cate to catch up sometimes', 
+                isRead: true, 
+                isStarred: true, 
+                sentAt : 1571133930594, 
+                removedAt : null, //for later use
+                from: 'coco@coco.com', 
+                to: 'user@appsus.com',
+                isTrash: true
+            },
+            {
+                id: 'e106',
+                subject: 'eiss you!',
+                body: 'Would eate to catch up sometimes', 
+                isRead: false, 
+                isStarred: false, 
+                sentAt : 1571133930594, 
+                removedAt : null, //for later use
+                from: 'joeo@eoeo.com', 
+                to: 'user@appsus.com',
+                isTrash: false
+            },
+            {
+                id: 'e107',
+                subject: 'giss you!',
+                body: 'Would gate to catch up sometimes', 
+                isRead: true, 
+                isStarred: true, 
+                sentAt : 1571133930594, 
+                removedAt : null, //for later use
+                from: 'gojo@jogo.com', 
+                to: 'user@appsus.com',
+                isTrash: false
+            },
+            {
+                id: 'e108',
+                subject: 'liss you!',
+                body: 'Would late to catch up sometimes', 
+                isRead: false, 
+                isStarred: false, 
+                sentAt : 1571133930594, 
+                removedAt : null, //for later use
+                from: 'lojo@jolo.com', 
+                to: 'user@appsus.com',
+                isTrash: false
+            },
         ]
         utilService.saveToStorage(STORAGE_KEY, emails)
     }

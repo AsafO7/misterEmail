@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-export function FolderFilter({filterBy, onSetFilter}) {
+export function DropdownFilter({filterBy, onSetFilter}) {
 
   const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
 
@@ -14,7 +14,7 @@ export function FolderFilter({filterBy, onSetFilter}) {
   }
 
   return (
-    <div className="folder-filter-wrapper p5">
+    <div className="dropdown-filter-wrapper p5">
       <label htmlFor="read-filter">isRead</label>
       <select id="read-filter" onChange={(e) => handleFilterChange(e)} name="isRead">
         <option value={""}>All</option>
