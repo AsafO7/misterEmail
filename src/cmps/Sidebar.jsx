@@ -6,9 +6,9 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom"
 
-export function Sidebar({filterBy, onSetFilter}) {
+export function Sidebar({filterBy, onSetFilter, unreadCount}) {
 
-  const [folder, setFolder] = useState("Inbox")
+  const [folder, setFolder] = useState(filterBy.folder)
   const params = useParams()
   const navigate = useNavigate()
 
@@ -16,7 +16,7 @@ export function Sidebar({filterBy, onSetFilter}) {
     onSetFilter({...filterBy, folder: folderName})
     setFolder(folderName)
     if(params.emailId) {
-      navigate('/mails')
+      navigate(`/mails`)
     }
   }
 
@@ -27,6 +27,7 @@ export function Sidebar({filterBy, onSetFilter}) {
         onClick={() => handleFolderSwitch("Inbox")}>
         <InboxIcon />
         <span>Inbox</span>
+        <div className='inbox-unread-count'>{unreadCount ? unreadCount : ""}</div>
       </span>
       <span 
         className={`flex ${folder === "Starred" ? "selected-folder" : ""}`}

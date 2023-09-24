@@ -21,12 +21,13 @@ export function DropdownFilter({filterBy, onSetFilter}) {
         <option value={"false"}>Unread</option>
         <option value={"true"}>Read</option>
       </select>
-      <label htmlFor="date-filter">Date</label>
-      <select id="date-filter" onChange={(e) => handleFilterChange(e)} name="date">
+      <label htmlFor="order-filter">Order</label>
+      <select id="order-filter" onChange={(e) => handleFilterChange(e)} name="order">
         <option value={""}>All</option>
         <option value={"asc"}>Ascending</option>
         <option value={"desc"}>Descending</option>
       </select>
+      <label htmlFor="date"><input type='date' id="date" onChange={(e) => handleFilterChange(e)} name="date"/></label>
     </div>
   )
 }

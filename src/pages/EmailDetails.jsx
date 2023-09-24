@@ -4,10 +4,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useOutletContext } from "react-router-dom";
 import { mailService } from "../services/mail.service";
 import { formatDistanceToNow } from 'date-fns';
+import { eventBusService } from '../services/event-bus.service'
 
 export function EmailDetails() {
 
-  const [onRemoveEmail, getEmailById, onBooleanStateChange] = useOutletContext()
+  const [onRemoveEmail, getEmailById, onUpdateEmail, searchParams] = useOutletContext()
 
   const [email, setEmail] = useState()
   const navigate = useNavigate()
@@ -23,9 +24,10 @@ export function EmailDetails() {
   }
 
   async function onDelete() {
-    email.isTrash ? await onRemoveEmail(email.id) : await onBooleanStateChange(email.id, "isTrash", true)
+    email.isTrash ? await onRemoveEmail(email) : await onUpdateEmail(email, "isTrash", true)
     setEmail({})
-    navigate('/mails')
+    navigate(`/mails/${searchParams}`)
+    eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully removed'})
   }
 
   function getTimeAgo(sentDate) {
@@ -34,7 +36,7 @@ export function EmailDetails() {
 
   return (
     <>
-      {email ? <article className="displayed-email-wrapper p5">
+      {email ? <article className="displayed-email-wrapper">
         <h2>{email.subject}</h2>
         <section className="flex space-between email-sent-details">
             <div className="flex column">
@@ -42,7 +44,7 @@ export function EmailDetails() {
               <span>To {mailService.getUser().email === email.to ? "me" : <b>{email.to}</b>}</span>
             </div>
             <div className="flex column align-end">
-              <time style={{textAlign: 'end'}}>{new Date(email.sentAt).toLocaleString('default', {
+              {email.sentAt !== null && <time style={{textAlign: 'end'}}>{new Date(email.sentAt).toLocaleString('default', {
                   month: 'short', 
                   day: '2-digit',
                   hour: 'numeric',
@@ -50,13 +52,13 @@ export function EmailDetails() {
                   year: 'numeric',
                 })}
                 , ({getTimeAgo(email.sentAt)})
-              </time>
+              </time>}
               <span onClick={onDelete} style={{cursor: 'pointer'}}>
                 <DeleteIcon />
               </span>
             </div>
         </section>
-        <p style={{marginTop: '30px'}}>{email.body}</p>
+        <p className="email-body">{email.body}</p>
       </article>
       : <h2>Loading...</h2>}
     </>

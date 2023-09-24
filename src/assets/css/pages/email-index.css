@@ -22,6 +22,7 @@
 
 .emails-folder-wrapper {
     grid-area: 'm';
+    overflow: hidden;
 }
 
 .compose-btn {
@@ -32,6 +33,10 @@
     font-weight: 500;
     font-size: 1em;
     padding: 15px;
+}
+
+.sidebar-email-wrapper {
+    height: 700px;
 }
 
 /*************************************** EmailFilter ***************************************/
@@ -49,7 +54,7 @@
     font-size: 1em;
 }
 
-/*************************************** FolderFilter ***************************************/
+/*************************************** DropdownFilter ***************************************/
 
 .dropdown-filter-wrapper {
     background-color: white;
@@ -57,7 +62,7 @@
 }
 
 label {
-    margin: 0 5px;
+    margin: 0 5px 0 10px;
 }
 
 /*************************************** Sidebar ***************************************/
@@ -88,6 +93,10 @@ label {
     border-radius: 30px;
 }
 
+.inbox-unread-count {
+    margin-left: auto;
+}
+
 /*************************************** EmailList ***************************************/
 
 .emails-wrapper {
@@ -96,7 +105,7 @@ label {
 
 /*************************************** EmailPreview ***************************************/
 
-.email-body {
+.email-body-preview {
     --max-lines: 1;
     display: -webkit-box;
     overflow: hidden;
@@ -168,4 +177,121 @@ label {
 
 .displayed-email-wrapper {
     background-color: rgb(227, 237, 245);
+    height: 100%;
+    overflow: scroll; 
+    box-sizing: content-box;
+    width: 100%;
+    padding: 10px 10px 10px 5px;
+}
+
+.email-body {
+    padding: 20px;
+    text-align: center;
+}
+
+/*************************************** EmailCompose ***************************************/
+
+.email-compose-wrapper {
+    max-width: 500px;
+    max-height: 500px;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: 1fr; 
+    grid-template-rows: auto auto 1fr auto; 
+    /* height: 100%;  */
+}
+
+.compose-fullscreen {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 20%;
+    max-width: 1300px;
+    max-height: 700px;
+}
+
+.email-compose-header {
+    background-color: rgb(227, 237, 245);
+    cursor: pointer;
+}
+
+.compose-to-input, .compose-subject-input {
+    width: 95%;
+    border: none;
+    border-bottom: 1px solid rgb(236, 236, 236);
+    font-size: 0.9rem;
+}
+
+.compose-to-input:focus, .compose-subject-input:focus {
+    outline: none;
+}
+
+.compose-to-input:focus {
+    letter-spacing: 1px;
+}
+
+.compose-body {
+    padding: 5px;
+    font-size: 0.9rem;
+    border: none;
+    resize: none;
+}
+
+.compose-body:focus {
+    outline: none;
+}
+
+.compose-send-btn {
+    background-color: #0b57d0;
+    border-radius: 18px;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    font-size: 1rem;
+}
+
+.compose-delete-btn {
+    opacity: 1;       
+}
+
+.screen-size-btns > .simple-button:hover {
+    background-color: rgb(215, 223, 229);
+}
+
+/*************************************** UserMsg ***************************************/
+
+.user-msg {
+    background-color: lightgray;
+    padding: 0.5em 1em;
+    position: fixed;
+    bottom: 10px;
+    left: 20px;
+    color: rgb(55, 55, 55);
+    font-weight: bold;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeout 1s linear 2.1s;
+}
+
+.user-msg.success {
+    background-color: lightgreen;
+}
+
+.user-msg.error {
+    background-color: pink;
+}
+
+.user-msg button {
+    /* float: right; */
+    margin: 1em;
+    /* width: fit-content; */
 }

@@ -1,7 +1,7 @@
 import { EmailPreview } from '../cmps/EmailPreview'
 
 
-export function EmailList({emails, onRemoveEmail, onBooleanStateChange}) {
+export function EmailList({emails, onRemoveEmail, onUpdateEmail, setUnreadCount}) {
   return (
     <>
       { emails.length === 0 ? <h2>No emails</h2> : 
@@ -12,7 +12,8 @@ export function EmailList({emails, onRemoveEmail, onBooleanStateChange}) {
               return <li key={email.id}>
                 <EmailPreview email={email} 
                 onRemoveEmail={onRemoveEmail}
-                onBooleanStateChange={onBooleanStateChange}/>
+                onUpdateEmail={onUpdateEmail}
+                setUnreadCount={setUnreadCount}/>
               </li>
             })}
           </ul>

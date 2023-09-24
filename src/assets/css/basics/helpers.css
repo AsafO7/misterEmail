@@ -12,6 +12,18 @@
     padding: 0;
 }
 
+.height-full {
+    height: 100%;
+}
+
+.width-full {
+    width: 100%;
+}
+
+.curser-pointer {
+    cursor: pointer;
+}
+
 /* Positioning */
 .flex {
     display: flex;
@@ -28,6 +40,14 @@
 
 .flex.justify-center {
     justify-content: center;
+}
+
+.flex.justify-start {
+    justify-content: flex-start;
+}
+
+.flex.justify-end {
+    justify-content: flex-end;
 }
 
 .flex.align-center {

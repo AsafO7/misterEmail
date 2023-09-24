@@ -8,6 +8,7 @@ export const mailService = {
     getById,
     createMail,
     getUser,
+    getFilterFromParams,
 }
 
 const STORAGE_KEY = 'mails'
@@ -17,7 +18,7 @@ _createMails()
 async function query(filterBy) {
     try {
         const mails = await storageService.query(STORAGE_KEY)
-        let filteredMails = mails
+        let filteredMails = mails.filter((email) => email.isTrash === false && email.from !== getUser().email)
         if(filterBy) {
             filteredMails = filterMails(filterBy, mails)
         }
@@ -29,33 +30,44 @@ async function query(filterBy) {
 }
 
 function filterMails(filterBy, mails) {
-    let newMails = mails.filter((email) => email.isTrash === false)
-    const { folder, txt, isRead, date } = filterBy
+    let newMails = mails.filter((email) => email.isTrash === false && email.from !== getUser().email)
+    const { folder, txt, isRead, date, order } = filterBy
         if(folder !== '') {
             switch(folder) {
                 case "Starred":
-                    newMails = mails.filter((email) => email.isStarred === true && email.isTrash === false)
+                    newMails = newMails.filter((email) => email.isStarred === true && email.isTrash === false)
                     break;
                 case "Sent":
                     newMails = mails.filter((email) => email.from === getUser().email && email.isTrash === false)
                     break;
-                case "Draft":
+                case "Draft": 
+                    newMails = mails.filter((email) => email.sentAt === null)
+                    break;
                 case "Trash":
                     newMails = mails.filter((email) => email.isTrash === true)
                     break;
-                default: newMails = mails.filter((email) => email.isTrash === false)
+                default: newMails = newMails.filter((email) => email.isTrash === false)
             }
         }
         if(txt !== '') {
-            newMails = mails.filter((email) => email.body.includes(txt))
+            newMails = newMails.filter((email) => email.body.includes(txt) || email.from.includes(txt) || email.subject.includes(txt))
         }
         if(isRead !== "") {
             const isReadState = isRead === "true" ? true : false
             newMails = newMails.filter((email) => email.isRead === isReadState)
         }
         if(date !== "") {
+            const dateFilter = new Date(date)
+            newMails = newMails.filter((email) => {
+                const emailDate = new Date(email.sentAt)
+                return emailDate.getFullYear() === dateFilter.getFullYear() &&
+                emailDate.getMonth() === dateFilter.getMonth() &&
+                emailDate.getDay() === dateFilter.getDay()
+            })
+        }
+        if(order !== "") {
             newMails.sort((mail1, mail2) => mail1.sentAt - mail2.sentAt)
-            if(date === "desc") newMails.reverse()
+            if(order === "desc") newMails.reverse()
         }
     return newMails
 }
@@ -76,19 +88,46 @@ function save(mailToSave) {
     }
 }
 
-function createMail(subject = "A", body = "B", to = "C", from = "D") {
-    return {
+async function createMail(subject = "A", body = "B", to = "C", sentAt = new Date().getTime()) {
+    const mail = {
         subject,
-        body,
+        body, 
+        isRead: false, 
+        isStarred: false, 
+        sentAt, 
+        removedAt : null, //for later use
+        from: getUser().email, 
         to,
-        from,
+        isTrash: false
     }
+    const newMail = await save(mail)
+    return newMail
 }
 
 function getUser() {
     return {
         email: 'user@appsus.com', fullname: 'Mahatma Appsus'
     }
+}
+
+function getDefaultFilter() {
+    return {
+        folder: "",
+        txt: "",
+        isRead: "",
+        date: "",
+        order: ""
+    }
+}
+
+function getFilterFromParams(searchParams) {
+    const defaultFilter = getDefaultFilter()
+    const filterBy = {}
+    for (const field in defaultFilter) {
+        filterBy[field] = searchParams.get(field) || ''
+    }
+
+    return filterBy
 }
 
 function _createMails() {

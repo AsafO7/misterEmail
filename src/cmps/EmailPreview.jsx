@@ -1,18 +1,17 @@
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { mailService } from '../services/mail.service';
 import { useNavigate } from 'react-router-dom';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 
-export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
+export function EmailPreview({email, onRemoveEmail, onUpdateEmail/*, setUnreadCount*/}) {
 
   const navigate = useNavigate()
 
   async function onEmailNav() {
-    await mailService.save({...email, isRead: true})
+    await onUpdateEmail(email, "isRead", true)
     navigate(`${email.id}`)
   }
 
@@ -24,21 +23,22 @@ export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
     switch(identifier) {
       case "delete-icon":
       case "DeleteIcon":
-        email.isTrash ? await onRemoveEmail(email.id) : await onBooleanStateChange(email.id, "isTrash", true)
+        email.isTrash ? await onRemoveEmail(email.id) : await onUpdateEmail(email, "isTrash", true)
         break;
       case "unarchive-icon":
       case "UnarchiveIcon":
-        await onBooleanStateChange(email.id, "isTrash", false)
+        await onUpdateEmail(email, "isTrash", false)
+        // if(!email.isRead) setUnreadCount((prev) => prev + 0.5)
         break;
       case 'full-star':
       case 'empty-star':
       case 'flex':
       case "StarIcon":
       case "StarBorderIcon":
-        await onBooleanStateChange(email.id, "isStarred", !email.isStarred)
+        await onUpdateEmail(email, "isStarred", !email.isStarred)
         break;
       default: 
-      await onBooleanStateChange(email.id, "isRead", !email.isRead)
+      await onUpdateEmail(email, "isRead", !email.isRead)
     }
   }
 
@@ -61,7 +61,7 @@ export function EmailPreview({email, onRemoveEmail, onBooleanStateChange}) {
         : <span className='empty-star'><StarBorderIcon onClick={handleClick}/></span>}
       <span className='email-from'>{email.from}</span>
       <span className='text-subject'>{email.subject}</span>
-      <p className='email-body'>{email.body}</p>
+      <p className='email-body-preview'>{email.body}</p>
       <div className='email-date'>
         <span>{new Date(email.sentAt).toLocaleString('default',
         { month: 'short',})}</span>

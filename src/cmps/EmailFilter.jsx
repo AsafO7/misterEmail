@@ -11,18 +11,12 @@ export function EmailFilter({filterBy, onSetFilter}) {
     }, [filterByToEdit])
 
     function handleChange(ev) {
-        let { value, name: field/*, type*/ } = ev.target
-        // value = type === 'number' ? +value : value
-        setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
-    }
-
-    function onSubmitFilter(ev) {
-      ev.preventDefault()
-      onSetFilter(filterByToEdit)
+      let { value, name: field } = ev.target
+      setFilterByToEdit({ ...filterBy, [field]: value })
     }
 
   return (
-    <form onSubmit={onSubmitFilter} className='txt-filter-form flex'>
+    <form className='txt-filter-form flex'>
       <label className='filter-wrapper flex align-center p10'>
         <SearchIcon />
         <input type="text" 
