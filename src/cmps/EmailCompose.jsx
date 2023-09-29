@@ -2,38 +2,44 @@ import MinimizeIcon from '@mui/icons-material/Minimize';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { mailService } from '../services/mail.service';
 
-// HANDLE FULL SCREEN STATE
-export function EmailCompose({setComposeModalState, onCreateMail, onCreateDraft, currDraft}) {
+
+export function EmailCompose({setComposeModalState, onCreateMail}) {
 
   const [screenState, setScreenState] = useState("normal")
-  const [composedEmail, setComposedEmail] = useState({recipients: "", subject: "", body: ""})
-  const [draftCreated, setDraftCreated] = useState(false)
+  const [composedEmail, setComposedEmail] = useState() //SEND THE ENITRE OBJECT
+  const refTimeout = useRef(null)
 
   useEffect(() => {
-    // let int
-    // if(currDraft === null && (composedEmail.subject !== "" || composedEmail.body !== "" || composedEmail.recipients !== "")) {
-    if(!draftCreated) {
-      setDraftInterval()
-    }
-    // }
-    // return () => {
-    //   clearInterval(int)
-    // }
+    setComposedEmail(setEmptyMail())
   },[])
 
+  useEffect(() => {
+    if(composedEmail && (composedEmail.body !== ""
+    || composedEmail.subject !== ""
+    || composedEmail.to !== "")) {
+      console.log("timeout useEffect")
+      refTimeout.current = setTimeout(() => {
+        saveDraft()
+      },5000)
+
+      return () => {
+        clearTimeout(refTimeout.current)
+      }
+    }
+  },[composedEmail])
+
   async function saveDraft() {
-    await onCreateDraft(composedEmail.subject, composedEmail.body, composedEmail.recipients)
-    setDraftCreated(true)
+    console.log("savedDraft called");
+    await onCreateMail(composedEmail, setComposedEmail)
   }
 
-  function handleCloseModal() {
+  async function handleCloseModal() {
     setScreenState("normal")
     setComposeModalState((prev) => !prev)
-    if(currDraft !== null) {
-      setComposedEmail({recipients: "", subject: "", body: ""})
-    }
+    setComposedEmail(setEmptyMail())
   }
 
   function handleInputChange(value, field) {
@@ -42,29 +48,35 @@ export function EmailCompose({setComposeModalState, onCreateMail, onCreateDraft,
 
   async function handleSendMail() {
     try {
-      await onCreateMail(composedEmail.subject, composedEmail.body, composedEmail.recipients)
-      setComposedEmail({recipients: "", subject: "", body: ""})
+      await onCreateMail({...composedEmail, sentAt: new Date().getTime(), removedAt: new Date().getTime()}, setComposedEmail)
+      setComposedEmail(setEmptyMail())
       handleCloseModal()
     }
     catch(err) {
       console.log(err)
     }
   }
-
-  function setDraftInterval() {
-    console.log(2)
-    setInterval(() => {
-      saveDraft()
-    },5000)
-  }
   
   function handleScreenStateChange(e) {
-    console.log(e.target);
     if(e.target.id && e.target.id === 'full' || e.target.parentElement && e.target.parentElement.id === 'full') {
       screenState === "fullscreen" ? setScreenState("normal") : setScreenState("fullscreen")
     }
     else {
       screenState === "minimized" ? setScreenState("normal") : setScreenState("minimized")
+    }
+  }
+
+  function setEmptyMail() {
+    return {
+      subject: "",
+      body: "", 
+      isRead: false, 
+      isStarred: false, 
+      sentAt: null, 
+      removedAt: null, //for later use
+      from: mailService.getUser().email, 
+      to: "",
+      isTrash: false,
     }
   }
 
@@ -93,20 +105,20 @@ export function EmailCompose({setComposeModalState, onCreateMail, onCreateDraft,
             <input type='text' 
               className='compose-to-input p10' 
               placeholder='Recipients'
-              value={composedEmail.recipients}
-              name='recipient'
+              // value={composedEmail.recipients}
+              name='to'
               onFocus={(e) => e.target.placeholder='To'}
               onBlur={(e) => e.target.placeholder='Recipients'}
-              onChange={(e) => handleInputChange(e.target.value, 'recipients')}/>
+              onChange={(e) => handleInputChange(e.target.value, 'to')}/>
 
             <input type='text' 
               className='compose-subject-input p10' 
               placeholder='Subject'
-              value={composedEmail.subject}
+              // value={composedEmail.subject}
               name='subject'
               onChange={(e) => handleInputChange(e.target.value, 'subject')}/>
           </section>
-          <textarea className='compose-body' name='body' value={composedEmail.body} onChange={(e) => handleInputChange(e.target.value, 'body')}></textarea>
+          <textarea className='compose-body' name='body' /*value={composedEmail.body}*/ onChange={(e) => handleInputChange(e.target.value, 'body')}></textarea>
           <footer className='flex space-between p5'>
             <button className='compose-send-btn' onClick={handleSendMail}>Send</button>
             <button className='compose-delete-btn simple-button' onClick={handleCloseModal}><DeleteIcon /></button>

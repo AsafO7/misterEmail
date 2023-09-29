@@ -22,7 +22,7 @@
 
 .emails-folder-wrapper {
     grid-area: 'm';
-    overflow: hidden;
+    overflow: scroll;
 }
 
 .compose-btn {
@@ -44,7 +44,7 @@
 .filter-wrapper {
     background-color: rgb(227, 235, 244);
     border-radius: 10px;
-    margin-left: 100px;
+    
 }
 
 .mail-filter-input {
@@ -52,6 +52,12 @@
     background-color: rgb(227, 235, 244);
     text-indent: 7px;
     font-size: 1em;
+}
+
+@media screen and (min-width: 500px) {
+    .filter-wrapper {
+        margin-left: 100px;
+    }
 }
 
 /*************************************** DropdownFilter ***************************************/
@@ -120,6 +126,7 @@ label {
     font-weight: bold;
     padding: 10px 0;
     position: relative;
+    overflow: hidden;
 }
 
 .email:hover {

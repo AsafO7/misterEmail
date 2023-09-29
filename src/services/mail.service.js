@@ -29,24 +29,25 @@ async function query(filterBy) {
     }
 }
 
-function filterMails(filterBy, mails) {
+async function filterMails(filterBy, mails) {
     let newMails = mails.filter((email) => email.isTrash === false && email.from !== getUser().email)
     const { folder, txt, isRead, date, order } = filterBy
         if(folder !== '') {
             switch(folder) {
                 case "Starred":
-                    newMails = newMails.filter((email) => email.isStarred === true && email.isTrash === false)
+                    newMails = newMails.filter((email) => email.isStarred === true && email.isTrash === false && email.sentAt !== null)
                     break;
                 case "Sent":
-                    newMails = mails.filter((email) => email.from === getUser().email && email.isTrash === false)
+                    newMails = mails.filter((email) => email.from === getUser().email && email.isTrash === false && email.sentAt !== null)
                     break;
-                case "Draft": 
-                    newMails = mails.filter((email) => email.sentAt === null)
+                case "Draft":
+                    newMails = await storageService.query(STORAGE_KEY)
+                    newMails = newMails.filter((email) => email.sentAt === null && email.isTrash === false)
                     break;
                 case "Trash":
                     newMails = mails.filter((email) => email.isTrash === true)
                     break;
-                default: newMails = newMails.filter((email) => email.isTrash === false)
+                default: newMails = newMails.filter((email) => email.isTrash === false && email.sentAt !== null)
             }
         }
         if(txt !== '') {
@@ -88,19 +89,21 @@ function save(mailToSave) {
     }
 }
 
-async function createMail(subject = "A", body = "B", to = "C", sentAt = new Date().getTime()) {
+async function createMail(email) {
     const mail = {
-        subject,
-        body, 
-        isRead: false, 
-        isStarred: false, 
-        sentAt, 
-        removedAt : null, //for later use
-        from: getUser().email, 
-        to,
-        isTrash: false
+        subject: email.subject ? email.subject : "",
+        body: email.body ? email.body : "", 
+        isRead: email.isRead ? email.isRead : false, 
+        isStarred: email.isStarred ? email.isStarred : false, 
+        sentAt: email.sentAt ? email.sentAt : null, 
+        removedAt : email.removedAt ? email.removedAt : null, //for later use
+        from: email.from ? email.from : mailService.getUser().email, 
+        to: email.to ? email.to : "",
+        isTrash: email.isTrash ? email.isTrash : false,
     }
-    const newMail = await save(mail)
+    let newMail
+    await save(mail).then((res) => newMail = res)
+    console.log("mail created")
     return newMail
 }
 

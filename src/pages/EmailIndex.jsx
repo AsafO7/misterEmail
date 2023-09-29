@@ -18,7 +18,6 @@ export function EmailIndex() {
   const [filterBy, setFilterBy] = useState(mailService.getFilterFromParams(searchParams))
   const [composeModalState, setComposeModalState] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
-  const [currDraft, setCurrDraft] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
 
@@ -78,18 +77,12 @@ export function EmailIndex() {
     }
   }
 
-  async function onCreateDraft(subject, body, to) {
-    if(currDraft === null) {
-      const newMail = await mailService.createMail(subject, body, to, null)
-      setCurrDraft(newMail)
-      getEmails()
-    }
-  }
-
-  async function onCreateMail(subject, body, to) {
+  async function onCreateMail(email, setComposedEmail) {
     try {
-      /*const newMail = */await mailService.createMail(subject, body, to)
-      // await mailService.save(newMail)
+      if(email === null) return
+      // console.log(email)
+      const newM = await mailService.save(email)
+      setComposedEmail(newM)
       eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully added'})
       navigate(`/mails?${searchParams}`)
       // setUnreadCount((prev) => prev + 1)
@@ -136,9 +129,7 @@ export function EmailIndex() {
           }
           {composeModalState && <EmailCompose 
             setComposeModalState={setComposeModalState} 
-            onCreateMail={onCreateMail} 
-            onCreateDraft={onCreateDraft}
-            currDraft={currDraft}/>}
+            onCreateMail={onCreateMail} />}
         </main>}
       </div>
     </div>
