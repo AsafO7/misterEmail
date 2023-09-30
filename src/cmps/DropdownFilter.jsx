@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import PropTypes from 'prop-types'
+import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
 
 export function DropdownFilter({filterBy, onSetFilter}) {
 
   const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
 
-  useEffect(() => {
+  useEffectUpdate(() => {
     onSetFilter(filterByToEdit)
-}, [filterByToEdit])
+  },[filterByToEdit])
 
   function handleFilterChange(e) {
     const { value, name: field } = e.target
@@ -30,4 +32,15 @@ export function DropdownFilter({filterBy, onSetFilter}) {
       <label htmlFor="date"><input type='date' id="date" onChange={(e) => handleFilterChange(e)} name="date"/></label>
     </div>
   )
+}
+
+DropdownFilter.propTypes = {
+  filterBy: PropTypes.shape({
+    folder: PropTypes.string,
+    txt: PropTypes.string,
+    isRead: PropTypes.bool,
+    date: PropTypes.string,
+    order: PropTypes.string,
+  }),
+  onSetFilter: PropTypes.func
 }

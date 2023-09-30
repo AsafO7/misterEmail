@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import PropTypes from 'prop-types'
 
-export function EmailPreview({email, onRemoveEmail, onUpdateEmail/*, setUnreadCount*/}) {
+export function EmailPreview({email, onRemoveEmail, onUpdateEmail}) {
 
   const navigate = useNavigate()
 
@@ -75,4 +76,21 @@ export function EmailPreview({email, onRemoveEmail, onUpdateEmail/*, setUnreadCo
       </section>
     </section>
   )
+}
+
+EmailPreview.propTypes = {
+  email: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    subject: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired, 
+    isRead: PropTypes.bool.isRequired, 
+    isStarred: PropTypes.bool.isRequired, 
+    sentAt : PropTypes.number || null, 
+    removedAt : PropTypes.number || null,
+    from: PropTypes.string.isRequired, 
+    to: PropTypes.string.isRequired,
+    isTrash: PropTypes.bool.isRequired
+  }).isRequired,
+  onRemoveEmail: PropTypes.func.isRequired, 
+  onUpdateEmail: PropTypes.func.isRequired,
 }

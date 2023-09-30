@@ -6,7 +6,7 @@ export const mailService = {
     save,
     remove,
     getById,
-    createMail,
+    // createMail,
     getUser,
     getFilterFromParams,
 }
@@ -89,23 +89,23 @@ function save(mailToSave) {
     }
 }
 
-async function createMail(email) {
-    const mail = {
-        subject: email.subject ? email.subject : "",
-        body: email.body ? email.body : "", 
-        isRead: email.isRead ? email.isRead : false, 
-        isStarred: email.isStarred ? email.isStarred : false, 
-        sentAt: email.sentAt ? email.sentAt : null, 
-        removedAt : email.removedAt ? email.removedAt : null, //for later use
-        from: email.from ? email.from : mailService.getUser().email, 
-        to: email.to ? email.to : "",
-        isTrash: email.isTrash ? email.isTrash : false,
-    }
-    let newMail
-    await save(mail).then((res) => newMail = res)
-    console.log("mail created")
-    return newMail
-}
+// async function createMail(email) {
+//     const mail = {
+//         subject: email.subject ? email.subject : "",
+//         body: email.body ? email.body : "", 
+//         isRead: email.isRead ? email.isRead : false, 
+//         isStarred: email.isStarred ? email.isStarred : false, 
+//         sentAt: email.sentAt ? email.sentAt : null, 
+//         removedAt : email.removedAt ? email.removedAt : null, //for later use
+//         from: email.from ? email.from : mailService.getUser().email, 
+//         to: email.to ? email.to : "",
+//         isTrash: email.isTrash ? email.isTrash : false,
+//     }
+//     let newMail
+//     await save(mail).then((res) => newMail = res)
+//     console.log("mail created")
+//     return newMail
+// }
 
 function getUser() {
     return {

@@ -25,6 +25,11 @@
     overflow: scroll;
 }
 
+/* To make the white spot the scroll bar  makes disappear */
+::-webkit-scrollbar-corner {
+    background: rgb(241, 246, 249);
+}
+
 .compose-btn {
     background-color: rgb(194, 231, 255);
     border: none;
@@ -37,6 +42,12 @@
 
 .sidebar-email-wrapper {
     height: 700px;
+}
+
+@media screen and (max-width: 500px) {
+    .email-index-wrapper {
+        font-size: 0.7em;
+    }
 }
 
 /*************************************** EmailFilter ***************************************/
@@ -199,8 +210,8 @@ label {
 /*************************************** EmailCompose ***************************************/
 
 .email-compose-wrapper {
-    max-width: 500px;
-    max-height: 500px;
+    max-width: 480px;
+    max-height: 480px;
     background-color: white;
     position: absolute;
     bottom: 0;
@@ -209,7 +220,7 @@ label {
     margin-bottom: 5px;
     display: grid;
     grid-template-columns: 1fr; 
-    grid-template-rows: auto auto 1fr auto; 
+    grid-template-rows: auto 1fr auto; 
     /* height: 100%;  */
 }
 
@@ -249,6 +260,8 @@ label {
     font-size: 0.9rem;
     border: none;
     resize: none;
+    height: 80%;
+    width: 100%;
 }
 
 .compose-body:focus {

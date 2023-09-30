@@ -80,10 +80,11 @@ export function EmailIndex() {
   async function onCreateMail(email, setComposedEmail) {
     try {
       if(email === null) return
-      // console.log(email)
       const newM = await mailService.save(email)
       setComposedEmail(newM)
-      eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully added'})
+      if(email.sentAt) {
+        eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully added'})
+      }
       navigate(`/mails?${searchParams}`)
       // setUnreadCount((prev) => prev + 1)
       getEmails()

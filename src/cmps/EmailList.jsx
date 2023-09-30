@@ -1,5 +1,5 @@
 import { EmailPreview } from '../cmps/EmailPreview'
-
+import PropTypes from 'prop-types'
 
 export function EmailList({emails, onRemoveEmail, onUpdateEmail, setUnreadCount}) {
   return (
@@ -21,4 +21,22 @@ export function EmailList({emails, onRemoveEmail, onUpdateEmail, setUnreadCount}
       }
     </>
   )
+}
+
+EmailList.propTypes = {
+  emails: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    subject: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired, 
+    isRead: PropTypes.bool.isRequired, 
+    isStarred: PropTypes.bool.isRequired, 
+    sentAt : PropTypes.number || null, 
+    removedAt : PropTypes.number || null,
+    from: PropTypes.string.isRequired, 
+    to: PropTypes.string.isRequired,
+    isTrash: PropTypes.bool.isRequired
+  })),
+  onRemoveEmail: PropTypes.func.isRequired,
+  onUpdateEmail: PropTypes.func.isRequired,
+  setUnreadCount: PropTypes.func.isRequired,
 }

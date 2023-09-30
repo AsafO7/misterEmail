@@ -1,14 +1,16 @@
 
 import SearchIcon from '@mui/icons-material/Search';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types'
+import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
 
 export function EmailFilter({filterBy, onSetFilter}) {
 
   const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
 
-    useEffect(() => {
-        onSetFilter(filterByToEdit)
-    }, [filterByToEdit])
+    useEffectUpdate(() => {
+      onSetFilter(filterByToEdit)
+    },[filterByToEdit])
 
     function handleChange(ev) {
       let { value, name: field } = ev.target
@@ -27,4 +29,15 @@ export function EmailFilter({filterBy, onSetFilter}) {
       </label>
     </form>
   )
+}
+
+EmailFilter.propTypes = {
+  filterBy: PropTypes.shape({
+    folder: PropTypes.string,
+    txt: PropTypes.string,
+    isRead: PropTypes.string,
+    date: PropTypes.string,
+    order: PropTypes.string,
+  }),
+  onSetFilter: PropTypes.func
 }

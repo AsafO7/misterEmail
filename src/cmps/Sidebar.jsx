@@ -5,10 +5,11 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom"
+import PropTypes from 'prop-types'
 
 export function Sidebar({filterBy, onSetFilter, unreadCount}) {
 
-  const [folder, setFolder] = useState(filterBy.folder)
+  const [folder, setFolder] = useState(filterBy.folder === "" ? "Inbox" : filterBy.folder)
   const params = useParams()
   const navigate = useNavigate()
 
@@ -55,4 +56,16 @@ export function Sidebar({filterBy, onSetFilter, unreadCount}) {
       </span>
     </nav>
   )
+}
+
+Sidebar.propTypes = {
+  filterBy: PropTypes.shape({
+    folder: PropTypes.string,
+    txt: PropTypes.string,
+    isRead: PropTypes.string,
+    date: PropTypes.string,
+    order: PropTypes.string,
+  }),
+  onSetFilter: PropTypes.func,
+  unreadCount: PropTypes.number,
 }
