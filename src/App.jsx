@@ -8,7 +8,6 @@ import AppHeader from './cmps/AppHeader';
 import { EmailDetails } from './pages/EmailDetails'
 import { EmailCompose } from './cmps/EmailCompose';
 import { UserMsg } from './cmps/UserMsg';
-// import { EmailCompose } from './cmps/EmailCompose';
 
 export function App() {
 
@@ -22,7 +21,7 @@ export function App() {
                         <Route path="/" element={<Home />}/>
                         <Route path="/about" element={<AboutUs />}/>
                         <Route path="/mails" element={<EmailIndex />}>
-                            <Route path='/mails/compose' element={<EmailCompose />}/>
+                            <Route path='/mails/compose/:emailId?' element={<EmailCompose />}/>
                             <Route path="/mails/:emailId" element={<EmailDetails />} />
                         </Route>
                     </Routes>

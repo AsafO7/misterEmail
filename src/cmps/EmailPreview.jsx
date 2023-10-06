@@ -7,13 +7,23 @@ import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import PropTypes from 'prop-types'
 
-export function EmailPreview({email, onRemoveEmail, onUpdateEmail}) {
+export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams}) {
 
   const navigate = useNavigate()
 
   async function onEmailNav() {
-    await onUpdateEmail(email, "isRead", true)
-    navigate(`${email.id}`)
+    if(filterBy.folder !== "Draft") {
+      // navigate(`compose/${email.id}`)
+      // setComposeModalState(true)
+      await onUpdateEmail(email, "isRead", true)
+      navigate(`${email.id}`)
+    }
+    else {
+    //   await onUpdateEmail(email, "isRead", true)
+      navigate(`compose/${email.id}?${searchParams}`)
+      setComposeModalState(true)
+      getEmails(filterBy)
+    }
   }
 
   async function identifyIcon(dataAtt, classEl) {

@@ -1,7 +1,7 @@
 import { EmailPreview } from '../cmps/EmailPreview'
 import PropTypes from 'prop-types'
 
-export function EmailList({emails, onRemoveEmail, onUpdateEmail, setUnreadCount}) {
+export function EmailList({emails, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams}) {
   return (
     <>
       { emails.length === 0 ? <h2>No emails</h2> : 
@@ -11,9 +11,12 @@ export function EmailList({emails, onRemoveEmail, onUpdateEmail, setUnreadCount}
             {emails.map((email) => {
               return <li key={email.id}>
                 <EmailPreview email={email} 
+                getEmails={getEmails}
                 onRemoveEmail={onRemoveEmail}
                 onUpdateEmail={onUpdateEmail}
-                setUnreadCount={setUnreadCount}/>
+                filterBy={filterBy}
+                setComposeModalState={setComposeModalState}
+                searchParams={searchParams}/>
               </li>
             })}
           </ul>

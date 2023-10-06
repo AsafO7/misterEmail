@@ -19,6 +19,7 @@ async function query(filterBy) {
     try {
         const mails = await storageService.query(STORAGE_KEY)
         let filteredMails = mails.filter((email) => email.isTrash === false && email.from !== getUser().email)
+        console.log("filtered mails: ", filteredMails)
         if(filterBy) {
             filteredMails = filterMails(filterBy, mails)
         }
@@ -31,6 +32,7 @@ async function query(filterBy) {
 
 async function filterMails(filterBy, mails) {
     let newMails = mails.filter((email) => email.isTrash === false && email.from !== getUser().email)
+    console.log("new mails before: ", newMails)
     const { folder, txt, isRead, date, order } = filterBy
         if(folder !== '') {
             switch(folder) {
@@ -70,6 +72,7 @@ async function filterMails(filterBy, mails) {
             newMails.sort((mail1, mail2) => mail1.sentAt - mail2.sentAt)
             if(order === "desc") newMails.reverse()
         }
+    console.log("new mails after: ", newMails)
     return newMails
 }
 

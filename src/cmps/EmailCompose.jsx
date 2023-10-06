@@ -5,20 +5,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useRef, useState } from 'react';
 import { mailService } from '../services/mail.service';
 import PropTypes from 'prop-types'
+import { useOutletContext, useParams, useNavigate } from 'react-router-dom'
 
 
-export function EmailCompose({setComposeModalState, onCreateMail}) {
+export function EmailCompose({/*composedModalState,*/setComposeModalState, onCreateMail, searchParams}) {
 
   const [screenState, setScreenState] = useState("normal")
   const [composedEmail, setComposedEmail] = useState()
+  // const [searchParams, setSearchParams] = useSearchParams()
+  const params = useParams()
   const refTimeout = useRef(null)
+  const navigate = useNavigate()
+
+  // const [onRemoveEmail, getEmailById, onUpdateEmail, searchParams] = useOutletContext()
+  const context = useOutletContext()
 
   useEffect(() => {
-    setComposedEmail(setEmptyMail())
-  },[])
+    if(params.emailId) getDraft()
+    else setComposedEmail(setEmptyMail())
+  },[params.emailId])
 
   useEffect(() => {
-    if(composedEmail && (composedEmail.body !== ""
+    if(!params.emailId && composedEmail && (composedEmail.body !== ""
     || composedEmail.subject !== ""
     || composedEmail.to !== "")) {
       refTimeout.current = setTimeout(() => {
@@ -31,14 +39,22 @@ export function EmailCompose({setComposeModalState, onCreateMail}) {
     }
   },[composedEmail])
 
+  async function getDraft() {
+    const draft = await mailService.getById(params.emailId)
+    setComposedEmail(draft)
+    // setComposeModalState(true)
+  }
+
   async function saveDraft() {
     await onCreateMail(composedEmail, setComposedEmail)
   }
 
   async function handleCloseModal() {
     setScreenState("normal")
-    setComposeModalState((prev) => !prev)
+    if(context) context.setComposeModalState((prev) => !prev)
+    else setComposeModalState((prev) => !prev)
     setComposedEmail(setEmptyMail())
+    navigate(`/mails?${searchParams}`)
   }
 
   function handleInputChange(value, field) {
@@ -105,6 +121,7 @@ export function EmailCompose({setComposeModalState, onCreateMail}) {
               className='compose-to-input p10' 
               placeholder='Recipients'
               name='to'
+              value={composedEmail ? composedEmail.to : ""}
               onFocus={(e) => e.target.placeholder='To'}
               onBlur={(e) => e.target.placeholder='Recipients'}
               onChange={(e) => handleInputChange(e.target.value, 'to')}/>
@@ -113,8 +130,9 @@ export function EmailCompose({setComposeModalState, onCreateMail}) {
               className='compose-subject-input p10' 
               placeholder='Subject'
               name='subject'
+              value={composedEmail ? composedEmail.subject : ""}
               onChange={(e) => handleInputChange(e.target.value, 'subject')}/>
-            <textarea className='compose-body' name='body' onChange={(e) => handleInputChange(e.target.value, 'body')}></textarea>
+            <textarea className='compose-body' name='body' value={composedEmail ? composedEmail.body : ""} onChange={(e) => handleInputChange(e.target.value, 'body')}></textarea>
           </form>
           <footer className='flex space-between p5'>
             <button className='compose-send-btn' onClick={handleSendMail}>Send</button>

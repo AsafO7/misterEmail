@@ -8,7 +8,7 @@ import { eventBusService } from '../services/event-bus.service'
 
 export function EmailDetails() {
 
-  const [onRemoveEmail, getEmailById, onUpdateEmail, searchParams] = useOutletContext()
+  const {onRemoveEmail, getEmailById, onUpdateEmail, searchParams} = useOutletContext()
 
   const [email, setEmail] = useState()
   const navigate = useNavigate()

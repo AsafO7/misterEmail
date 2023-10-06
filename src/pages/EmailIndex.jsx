@@ -119,18 +119,22 @@ export function EmailIndex() {
         { loading ? <h2>Loading...</h2> : 
         <main className='emails-folder-wrapper flex column full-grow'>
           <DropdownFilter onSetFilter={onSetFilter}/>
-          {params.emailId ? <Outlet context={[onRemoveEmail, getEmailById, onUpdateEmail, searchParams]}/> :
+          {params.emailId && filterBy.folder !== "Draft" ? 
+          <Outlet context={{onRemoveEmail, getEmailById, onUpdateEmail, searchParams, setComposeModalState}}/> :
           <EmailList 
               emails={emails} 
-              setEmails={setEmails} 
+              getEmails={getEmails} 
               filterBy={filterBy} 
               onRemoveEmail={onRemoveEmail}
               onUpdateEmail={onUpdateEmail}
-              setUnreadCount={setUnreadCount}/>
+              setComposeModalState={setComposeModalState}
+              searchParams={searchParams}/>
           }
           {composeModalState && <EmailCompose 
+            composeModalState={composeModalState}
             setComposeModalState={setComposeModalState} 
-            onCreateMail={onCreateMail} />}
+            onCreateMail={onCreateMail}
+            searchParams={searchParams} />}
         </main>}
       </div>
     </div>
