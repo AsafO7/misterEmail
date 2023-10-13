@@ -13,10 +13,10 @@ export function EmailIndex() {
 
   const [emails, setEmails] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedEmails, setSelectedEmails] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
-  //{folder: "", txt: "", isRead: "", date: ""}
   const [filterBy, setFilterBy] = useState(mailService.getFilterFromParams(searchParams))
-  const [composeModalState, setComposeModalState] = useState(false)
+  const [composeModalState, setComposeModalState] = useState(searchParams.size === 2 ? true : false)
   const [unreadCount, setUnreadCount] = useState(0)
   const params = useParams()
   const navigate = useNavigate()
@@ -31,9 +31,7 @@ export function EmailIndex() {
       const emails = await mailService.query(filterBy)
       setEmails(emails)
       const allEmails = await mailService.query()
-      // if(filterBy.folder === "" || filterBy.folder === "Inbox") {
-        setUnreadCount(allEmails.filter((email) => !email.isRead).length)
-      // }
+      setUnreadCount(allEmails.filter((email) => !email.isRead).length)
       setLoading(false)
     }
     catch(err) {
@@ -81,12 +79,11 @@ export function EmailIndex() {
     try {
       if(email === null) return
       const newM = await mailService.save(email)
-      setComposedEmail(newM)
-      if(email.sentAt) {
+      if(newM.sentAt === null) setComposedEmail(newM)
+      else {
         eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully added'})
       }
       navigate(`/mails?${searchParams}`)
-      // setUnreadCount((prev) => prev + 1)
       getEmails()
     }
     catch(err) {
@@ -118,7 +115,7 @@ export function EmailIndex() {
         </aside>
         { loading ? <h2>Loading...</h2> : 
         <main className='emails-folder-wrapper flex column full-grow'>
-          <DropdownFilter onSetFilter={onSetFilter}/>
+          <DropdownFilter filterBy={filterBy} onSetFilter={onSetFilter} emails={emails} selectedEmailsLength={selectedEmails.length} setSelectedEmails={setSelectedEmails}/>
           {params.emailId && filterBy.folder !== "Draft" ? 
           <Outlet context={{onRemoveEmail, getEmailById, onUpdateEmail, searchParams, setComposeModalState}}/> :
           <EmailList 
@@ -128,7 +125,9 @@ export function EmailIndex() {
               onRemoveEmail={onRemoveEmail}
               onUpdateEmail={onUpdateEmail}
               setComposeModalState={setComposeModalState}
-              searchParams={searchParams}/>
+              searchParams={searchParams}
+              selectedEmails={selectedEmails}
+              setSelectedEmails={setSelectedEmails}/>
           }
           {composeModalState && <EmailCompose 
             composeModalState={composeModalState}

@@ -1,25 +1,29 @@
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from 'react-router-dom';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import { useState } from 'react';
+import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
 
-export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams}) {
+export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams, selectedEmails, setSelectedEmails}) {
 
+  const [selected, setSelected] = useState(false)
   const navigate = useNavigate()
+
+  useEffectUpdate(() => {
+    setSelected(selectedEmails.includes(email.id))
+  },[selectedEmails])
 
   async function onEmailNav() {
     if(filterBy.folder !== "Draft") {
-      // navigate(`compose/${email.id}`)
-      // setComposeModalState(true)
       await onUpdateEmail(email, "isRead", true)
       navigate(`${email.id}`)
     }
     else {
-    //   await onUpdateEmail(email, "isRead", true)
       navigate(`compose/${email.id}?${searchParams}`)
       setComposeModalState(true)
       getEmails(filterBy)
@@ -39,7 +43,6 @@ export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, fi
       case "unarchive-icon":
       case "UnarchiveIcon":
         await onUpdateEmail(email, "isTrash", false)
-        // if(!email.isRead) setUnreadCount((prev) => prev + 0.5)
         break;
       case 'full-star':
       case 'empty-star':
@@ -59,14 +62,32 @@ export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, fi
                    break;
       case "svg": identifyIcon(e.target.getAttribute('data-testid'), null)
                   break;
+      case "input": handleCheckboxChange()
+                  break;
       default: onEmailNav()
     }
+    // console.log(e.target.localName)
     // console.log(e.target.getAttribute('data-testid'))
+  }
+
+  function handleCheckboxChange() {
+    let newSelectedMails = selectedEmails
+    // console.log(selectedEmails)
+    if(selected) {
+      const ind = selectedEmails.indexOf(email.id)
+      newSelectedMails.splice(ind, 1)
+    }
+    else {
+      newSelectedMails.push(email.id)
+    }
+    setSelected((prev) => !prev)
+    setSelectedEmails(newSelectedMails)
   }
 
   return (
     <section className={`flex email ${email.isRead ? 'read-email' : ''}`} 
       onClick={(e) => handleClick(e)}>
+      <input type='checkbox' checked={selected} name='isSelected' onChange={() => {}}></input>
       {email.isStarred ? 
       <span className='full-star'><StarIcon sx={{color: '#fbba00'}} onClick={handleClick}/></span> 
         : <span className='empty-star'><StarBorderIcon onClick={handleClick}/></span>}

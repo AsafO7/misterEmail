@@ -1,7 +1,8 @@
 import { EmailPreview } from '../cmps/EmailPreview'
 import PropTypes from 'prop-types'
 
-export function EmailList({emails, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams}) {
+export function EmailList({emails, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams, selectedEmails, setSelectedEmails}) {
+
   return (
     <>
       { emails.length === 0 ? <h2>No emails</h2> : 
@@ -16,7 +17,9 @@ export function EmailList({emails, getEmails, onRemoveEmail, onUpdateEmail, filt
                 onUpdateEmail={onUpdateEmail}
                 filterBy={filterBy}
                 setComposeModalState={setComposeModalState}
-                searchParams={searchParams}/>
+                searchParams={searchParams}
+                selectedEmails={selectedEmails}
+                setSelectedEmails={setSelectedEmails}/>
               </li>
             })}
           </ul>
@@ -41,5 +44,5 @@ EmailList.propTypes = {
   })),
   onRemoveEmail: PropTypes.func.isRequired,
   onUpdateEmail: PropTypes.func.isRequired,
-  setUnreadCount: PropTypes.func.isRequired,
+  // setUnreadCount: PropTypes.func.isRequired,
 }

@@ -8,20 +8,20 @@ import PropTypes from 'prop-types'
 import { useOutletContext, useParams, useNavigate } from 'react-router-dom'
 
 
-export function EmailCompose({/*composedModalState,*/setComposeModalState, onCreateMail, searchParams}) {
+export function EmailCompose({setComposeModalState, onCreateMail, searchParams}) {
 
   const [screenState, setScreenState] = useState("normal")
   const [composedEmail, setComposedEmail] = useState()
-  // const [searchParams, setSearchParams] = useSearchParams()
   const params = useParams()
   const refTimeout = useRef(null)
   const navigate = useNavigate()
 
-  // const [onRemoveEmail, getEmailById, onUpdateEmail, searchParams] = useOutletContext()
   const context = useOutletContext()
 
   useEffect(() => {
-    if(params.emailId) getDraft()
+    const p = mailService.getFilterFromParams(searchParams)
+    if(p.to !== "") setComposedEmail(setEmptyMail(p.to, p.subject))
+    else if(params.emailId) getDraft()
     else setComposedEmail(setEmptyMail())
   },[params.emailId])
 
@@ -81,16 +81,16 @@ export function EmailCompose({/*composedModalState,*/setComposeModalState, onCre
     }
   }
 
-  function setEmptyMail() {
+  function setEmptyMail(subject, to) {
     return {
-      subject: "",
+      subject: subject ? subject : "",
       body: "", 
       isRead: false, 
       isStarred: false, 
       sentAt: null, 
       removedAt: null,
       from: mailService.getUser().email, 
-      to: "",
+      to: to ? to : "",
       isTrash: false,
     }
   }
