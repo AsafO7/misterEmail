@@ -1,6 +1,10 @@
 import { useState } from "react"
 import PropTypes from 'prop-types'
 import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MarkunreadIcon from '@mui/icons-material/Markunread';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
 
 /*
 1) Add a checkbox here that selects all mails when checked
@@ -8,14 +12,15 @@ import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
 3) Implement the functionality for when the icons are clicked
 */
 
-export function DropdownFilter({filterBy, onSetFilter, emails, selectedEmailsLength, setSelectedEmails}) {
+export function DropdownFilter({filterBy, onSetFilter, emails, selectedEmails, setSelectedEmails}) {
 
   const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
-  const [selected, setSelected] = useState(false)
+  // const [selected, setSelected] = useState(false)
 
-  useEffectUpdate(() => {
-    setSelected(selectedEmailsLength > 0)
-  },[selectedEmailsLength])
+  // useEffectUpdate(() => {
+  //   setSelected(selectedEmails.length > 0)
+  //   console.log("dropdown useEffect", selectedEmails);
+  // },[selectedEmails])
 
   useEffectUpdate(() => {
     onSetFilter(filterByToEdit)
@@ -36,10 +41,32 @@ export function DropdownFilter({filterBy, onSetFilter, emails, selectedEmailsLen
     }
   }
 
+  function handleUnreadSelected() {
+    console.log("handle unread")
+  }
+
+  function handleReadSelected() {
+    console.log("handle read")
+  }
+
+  function handleUnarchiveSelected() {
+    console.log("handle unarchive")
+  }
+
+  function handleDeleteSelected() {
+    console.log("handle delete")
+  }
+// console.log("Dropdown ", selectedEmails);
   return (
-      <div className="dropdown-filter-wrapper p5">
-        <input type='checkbox' name="select-all" onChange={(e) => handleSelectAll(e)} checked={selected}></input>
-        {selectedEmailsLength > 0 ? <span>There should be icons here</span> :
+      <div className="dropdown-filter-wrapper p5 flex">
+        <input type='checkbox' name="select-all" onChange={(e) => handleSelectAll(e)} checked={selectedEmails.length > 0}></input>
+        {selectedEmails.length > 0 ? 
+        <section /*className={'mail-icons-read' 'mail-icons-unread'}*/>
+          <span className='mark-as-unread'><MarkunreadIcon onClick={handleUnreadSelected} sx={{cursor: 'pointer'}}/></span>
+          <span className='mark-as-read'><MarkEmailReadIcon onClick={handleReadSelected} sx={{cursor: 'pointer'}}/></span>
+          {filterBy.folder === "Trash" && <span className='unarchive-icon'><UnarchiveIcon onClick={handleUnarchiveSelected} sx={{cursor: 'pointer'}}/></span>}
+          <span className='delete-icon'><DeleteIcon onClick={handleDeleteSelected} sx={{cursor: 'pointer'}}/></span>
+        </section> :
           <>
             <label htmlFor="read-filter">isRead</label>
             <select id="read-filter" onChange={(e) => handleFilterChange(e)} name="isRead">

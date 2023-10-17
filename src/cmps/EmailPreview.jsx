@@ -6,17 +6,17 @@ import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types'
-import { useState } from 'react';
-import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
+// import { useState } from 'react';
+// import { useEffectUpdate } from '../Custom Hooks/useEffectUpdate';
 
 export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, filterBy, setComposeModalState, searchParams, selectedEmails, setSelectedEmails}) {
 
-  const [selected, setSelected] = useState(false)
+  // const [selected, setSelected] = useState(false)
   const navigate = useNavigate()
 
-  useEffectUpdate(() => {
-    setSelected(selectedEmails.includes(email.id))
-  },[selectedEmails])
+  // useEffectUpdate(() => {
+  //   setSelected(selectedEmails.includes(email.id))
+  // },[selectedEmails])
 
   async function onEmailNav() {
     if(filterBy.folder !== "Draft") {
@@ -71,23 +71,24 @@ export function EmailPreview({email, getEmails, onRemoveEmail, onUpdateEmail, fi
   }
 
   function handleCheckboxChange() {
-    let newSelectedMails = selectedEmails
+    let newSelectedMails = [...selectedEmails]
     // console.log(selectedEmails)
-    if(selected) {
+    if(selectedEmails.includes(email.id)) {
       const ind = selectedEmails.indexOf(email.id)
       newSelectedMails.splice(ind, 1)
     }
     else {
       newSelectedMails.push(email.id)
     }
-    setSelected((prev) => !prev)
+    // setSelected((prev) => !prev)
     setSelectedEmails(newSelectedMails)
+    // console.log("Preview handleCheckBox", newSelectedMails)
   }
 
   return (
     <section className={`flex email ${email.isRead ? 'read-email' : ''}`} 
       onClick={(e) => handleClick(e)}>
-      <input type='checkbox' checked={selected} name='isSelected' onChange={() => {}}></input>
+      <input type='checkbox' checked={selectedEmails.includes(email.id)} name='isSelected' onChange={() => {}}></input>
       {email.isStarred ? 
       <span className='full-star'><StarIcon sx={{color: '#fbba00'}} onClick={handleClick}/></span> 
         : <span className='empty-star'><StarBorderIcon onClick={handleClick}/></span>}

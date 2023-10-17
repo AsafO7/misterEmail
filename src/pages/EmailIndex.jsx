@@ -24,7 +24,7 @@ export function EmailIndex() {
   useEffect(() => {
     setSearchParams(filterBy)
     getEmails()
-  },[filterBy])
+  }, [filterBy])
 
   async function getEmails() {
     try {
@@ -34,10 +34,11 @@ export function EmailIndex() {
       setUnreadCount(allEmails.filter((email) => !email.isRead).length)
       setLoading(false)
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
       setLoading(false)
     }
+    console.log(filterBy)
   }
 
   async function getEmailById(emailId) {
@@ -45,9 +46,9 @@ export function EmailIndex() {
       const mail = await mailService.getById(emailId)
       return mail
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
-      eventBusService.emit('show-user-msg', {type: 'error', txt: 'Could not open'})
+      eventBusService.emit('show-user-msg', { type: 'error', txt: 'Could not open' })
     }
   }
 
@@ -55,40 +56,41 @@ export function EmailIndex() {
     try {
       await mailService.remove(emailId)
       getEmails()
-      eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully removed'})
+      eventBusService.emit('show-user-msg', { type: 'success', txt: 'Successfully removed' })
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
-      eventBusService.emit('show-user-msg', {type: 'error', txt: 'Could not be removed'})
+      eventBusService.emit('show-user-msg', { type: 'error', txt: 'Could not be removed' })
     }
   }
 
   async function onUpdateEmail(email, field, newState) {
     try {
-      const updatedMail = {...email, [field]: newState}
+      const updatedMail = { ...email, [field]: newState }
       await mailService.save(updatedMail)
       getEmails()
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
-      eventBusService.emit('show-user-msg', {type: 'error', txt: 'Could not update'})
+      eventBusService.emit('show-user-msg', { type: 'error', txt: 'Could not update' })
     }
   }
 
   async function onCreateMail(email, setComposedEmail) {
     try {
-      if(email === null) return
+      if (email === null) return
       const newM = await mailService.save(email)
-      if(newM.sentAt === null) setComposedEmail(newM)
+      if (newM.sentAt === null) setComposedEmail(newM)
       else {
-        eventBusService.emit('show-user-msg', {type: 'success', txt: 'Successfully added'})
+        eventBusService.emit('show-user-msg', { type: 'success', txt: 'Successfully added' })
       }
-      navigate(`/mails?${searchParams}`)
+      // navigate(`/mails?${searchParams}`)
+      console.log("onCreateMail", filterBy);
       getEmails()
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
-      eventBusService.emit('show-user-msg', {type: 'error', txt: 'Could not create'})
+      eventBusService.emit('show-user-msg', { type: 'error', txt: 'Could not create' })
     }
   }
 
@@ -107,34 +109,34 @@ export function EmailIndex() {
         <span className='compose-btn-wrapper'>
           <button className='compose-btn flex align-center' onClick={handleComposeClick}><EditIcon />Compose</button>
         </span>
-        <EmailFilter filterBy={filterBy} onSetFilter={onSetFilter}/>
+        <EmailFilter filterBy={filterBy} onSetFilter={onSetFilter} />
       </section>
       <div className='sidebar-email-wrapper flex'>
         <aside className='sidebar-wrapper'>
-          <Sidebar filterBy={filterBy} onSetFilter={onSetFilter} unreadCount={unreadCount}/>
+          <Sidebar filterBy={filterBy} onSetFilter={onSetFilter} unreadCount={unreadCount} />
         </aside>
-        { loading ? <h2>Loading...</h2> : 
-        <main className='emails-folder-wrapper flex column full-grow'>
-          <DropdownFilter filterBy={filterBy} onSetFilter={onSetFilter} emails={emails} selectedEmailsLength={selectedEmails.length} setSelectedEmails={setSelectedEmails}/>
-          {params.emailId && filterBy.folder !== "Draft" ? 
-          <Outlet context={{onRemoveEmail, getEmailById, onUpdateEmail, searchParams, setComposeModalState}}/> :
-          <EmailList 
-              emails={emails} 
-              getEmails={getEmails} 
-              filterBy={filterBy} 
-              onRemoveEmail={onRemoveEmail}
-              onUpdateEmail={onUpdateEmail}
+        {loading ? <h2>Loading...</h2> :
+          <main className='emails-folder-wrapper flex column full-grow'>
+            <DropdownFilter filterBy={filterBy} onSetFilter={onSetFilter} emails={emails} selectedEmails={selectedEmails} setSelectedEmails={setSelectedEmails} />
+            {params.emailId && filterBy.folder !== "Draft" ?
+              <Outlet context={{ onRemoveEmail, getEmailById, onUpdateEmail, searchParams, setComposeModalState }} /> :
+              <EmailList
+                emails={emails}
+                getEmails={getEmails}
+                filterBy={filterBy}
+                onRemoveEmail={onRemoveEmail}
+                onUpdateEmail={onUpdateEmail}
+                setComposeModalState={setComposeModalState}
+                searchParams={searchParams}
+                selectedEmails={selectedEmails}
+                setSelectedEmails={setSelectedEmails} />
+            }
+            {composeModalState && <EmailCompose
+              composeModalState={composeModalState}
               setComposeModalState={setComposeModalState}
-              searchParams={searchParams}
-              selectedEmails={selectedEmails}
-              setSelectedEmails={setSelectedEmails}/>
-          }
-          {composeModalState && <EmailCompose 
-            composeModalState={composeModalState}
-            setComposeModalState={setComposeModalState} 
-            onCreateMail={onCreateMail}
-            searchParams={searchParams} />}
-        </main>}
+              onCreateMail={onCreateMail}
+              searchParams={searchParams} />}
+          </main>}
       </div>
     </div>
   )
