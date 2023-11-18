@@ -38,7 +38,7 @@ export function EmailIndex() {
       console.log(err)
       setLoading(false)
     }
-    console.log(filterBy)
+    // console.log(filterBy)
   }
 
   async function getEmailById(emailId) {
@@ -55,6 +55,7 @@ export function EmailIndex() {
   async function onRemoveEmail(emailId) {
     try {
       await mailService.remove(emailId)
+      setSelectedEmails([])
       getEmails()
       eventBusService.emit('show-user-msg', { type: 'success', txt: 'Successfully removed' })
     }
@@ -68,6 +69,7 @@ export function EmailIndex() {
     try {
       const updatedMail = { ...email, [field]: newState }
       await mailService.save(updatedMail)
+      selectedEmails([])
       getEmails()
     }
     catch (err) {
@@ -117,7 +119,13 @@ export function EmailIndex() {
         </aside>
         {loading ? <h2>Loading...</h2> :
           <main className='emails-folder-wrapper flex column full-grow'>
-            <DropdownFilter filterBy={filterBy} onSetFilter={onSetFilter} emails={emails} selectedEmails={selectedEmails} setSelectedEmails={setSelectedEmails} />
+            <DropdownFilter filterBy={filterBy} 
+                            onSetFilter={onSetFilter} 
+                            emails={emails} 
+                            selectedEmails={selectedEmails} 
+                            setSelectedEmails={setSelectedEmails}
+                            onUpdateEmail={onUpdateEmail}
+                            onRemoveEmail={onRemoveEmail} />
             {params.emailId && filterBy.folder !== "Draft" ?
               <Outlet context={{ onRemoveEmail, getEmailById, onUpdateEmail, searchParams, setComposeModalState }} /> :
               <EmailList
